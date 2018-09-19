@@ -1,6 +1,14 @@
 # Entangle
 
-**TODO: Add description**
+Function composition library for Elixir with the following features:
+
+- compose multiple functions into one.
+- add middleware inbetween every function call.
+- add middleware around every composition.
+- enable or disable middleware and specific function calls based on their associated layer.
+- composable functions should return {:ok, result} or {:error, reason}.
+- when a composed function returns {:error, reason}, the subsequent functions will be ignored.
+- setup multiple settings modules, with middleware and layer settings, for easy reuse.
 
 ## Installation
 
