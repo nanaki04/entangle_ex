@@ -41,12 +41,12 @@ defmodule Entangle.Branch do
   It can either be the module name of a module using `Entangle.Branch`,
   or a tuple with a reference to a pre-defined function and a keyword list of options.
   """
-  @type t :: module | {(Entangler.state -> Entangler.result), options}
+  @type t :: module | {(Entangler.state() -> Entangler.result()), options}
 
   @doc """
   The callback that contains the logic of the function to be used in a composition.
   """
-  @callback run(Entangle.Entangler.state) :: Entangle.Entangler.result
+  @callback run(Entangle.Entangler.state()) :: Entangle.Entangler.result()
 
   @doc """
   Callback to obtain the layers this module is attached to.
@@ -59,7 +59,7 @@ defmodule Entangle.Branch do
     quote bind_quoted: [opts: opts] do
       @behaviour Entangle.Branch
 
-      Module.register_attribute __MODULE__, :layers, []
+      Module.register_attribute(__MODULE__, :layers, [])
       @layers Keyword.get(opts, :layers, :*)
 
       @doc false
@@ -70,7 +70,7 @@ defmodule Entangle.Branch do
       @impl Entangle.Branch
       def layers(), do: @layers
 
-      defoverridable [run: 1]
+      defoverridable run: 1
     end
   end
 
@@ -78,7 +78,7 @@ defmodule Entangle.Branch do
   Creates a branch for the function composition on the fly.
   Referred functions should be predefined and passed in the form `Module.function_name/arity`.
   """
-  @spec branch((Entangler.state -> Entangler.result), options) :: t
+  @spec branch((Entangler.state() -> Entangler.result()), options) :: t
   def branch(fun, opts \\ []) do
     {fun, opts}
   end

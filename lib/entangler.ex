@@ -78,11 +78,12 @@ defmodule Entangle.Entangler do
       import Entangle.Entangler, only: :macros
       import Entangle.Branch, only: :functions
 
-      settings = Keyword.get(opts, :settings)
-                 |> Option.return
-                 |> Option.or_else(Keyword.get(opts, :seed))
-                 |> Option.return
-                 |> Option.or_else(Entangle.Seed.default_settings())
+      settings =
+        Keyword.get(opts, :settings)
+        |> Option.return()
+        |> Option.or_else(Keyword.get(opts, :seed))
+        |> Option.return()
+        |> Option.or_else(Entangle.Seed.default_settings())
 
       Module.register_attribute(__MODULE__, :entangles, accumulate: true)
       Module.register_attribute(__MODULE__, :settings, [])
@@ -95,6 +96,7 @@ defmodule Entangle.Entangler do
   @doc false
   defmacro __before_compile__(env) do
     entangles = Module.get_attribute(env.module, :entangles)
+
     %Entangle.Seed{
       layers: layers,
       layer_mask: layer_mask,
@@ -103,9 +105,10 @@ defmodule Entangle.Entangler do
     } = Module.get_attribute(env.module, :settings)
 
     Enum.map(entangles, fn {function_name, branches} ->
-      branches = Enum.filter(branches, fn branch ->
-        Entangle.Filter.layer_enabled?(branch, layer_mask, layers)
-      end)
+      branches =
+        Enum.filter(branches, fn branch ->
+          Entangle.Filter.layer_enabled?(branch, layer_mask, layers)
+        end)
 
       quote do
         def unquote(function_name)(state) do
@@ -147,7 +150,7 @@ defmodule Entangle.Entangler do
       {:ok, 5}
 
   """
-  @spec entangle(atom, [Entangle.Branch.t]) :: Macro.t
+  @spec entangle(atom, [Entangle.Branch.t()]) :: Macro.t()
   defmacro entangle(function_name, branches) do
     quote do
       @entangles {unquote(function_name), unquote(branches)}
@@ -158,29 +161,34 @@ defmodule Entangle.Entangler do
   Combines the branches into a function composition.
   This function is called during the pre compile phase, and should not be called directly.
   """
-  @spec compose_branches([Entangle.Branch.t], [Entangle.Thorn.t], [Entangle.Thorn.t]) :: (state -> result)
+  @spec compose_branches([Entangle.Branch.t()], [Entangle.Thorn.t()], [Entangle.Thorn.t()]) ::
+          (state -> result)
   def compose_branches(branches, thorns, roots) do
-    composition = Enum.reverse(branches)
-    |> Enum.reduce(&({:ok, &1}), fn
-      {run, _}, acc ->
-        run = compose_thorns(thorns, Result.bind(&run.(&1)))
-        &Result.bind(run.(&1), acc)
+    composition =
+      Enum.reverse(branches)
+      |> Enum.reduce(&{:ok, &1}, fn
+        {run, _}, acc ->
+          run = compose_thorns(thorns, Result.bind(&run.(&1)))
+          &Result.bind(run.(&1), acc)
 
-      branch, acc ->
-        run = compose_thorns(thorns, Result.bind(&branch.run(&1)))
-        &Result.bind(run.(&1), acc)
-    end)
+        branch, acc ->
+          run = compose_thorns(thorns, Result.bind(&branch.run(&1)))
+          &Result.bind(run.(&1), acc)
+      end)
 
-    compose_thorns(roots, Result.bind(fn state ->
-      composition.(state)
-    end))
+    compose_thorns(
+      roots,
+      Result.bind(fn state ->
+        composition.(state)
+      end)
+    )
   end
 
   @doc false
-  @spec compose_thorns([Entangle.Thorn.t], (result -> result)) :: (state -> result)
+  @spec compose_thorns([Entangle.Thorn.t()], (result -> result)) :: (state -> result)
   defp compose_thorns(thorns, first) do
     Enum.reverse(thorns)
-    |> Enum.reduce(&(first.({:ok, &1})), fn
+    |> Enum.reduce(&first.({:ok, &1}), fn
       {run, _}, next -> run.(next)
       thorn, next when is_atom(thorn) -> thorn.run(next)
     end)

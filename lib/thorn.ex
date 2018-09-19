@@ -40,8 +40,7 @@ defmodule Entangle.Thorn do
   @typedoc """
   Options that can be passed upon using this module, or as second argument of the `Entangle.Thorn.grow/2` function.
   """
-  @type option ::
-    {:layers, [atom]}
+  @type option :: {:layers, [atom]}
 
   @type options :: [option]
 
@@ -50,12 +49,12 @@ defmodule Entangle.Thorn do
   It can either be the module name of a module using `Entangle.Thorn`,
   or a tuple with a reference to a pre-defined function and a keyword list of options.
   """
-  @type t :: module | {((Entangler.state -> Entangler.result) -> Entangler.result), options}
+  @type t :: module | {((Entangler.state() -> Entangler.result()) -> Entangler.result()), options}
 
   @doc """
   The callback that contains the middlewares logic.
   """
-  @callback run((Entangler.state -> Entangler.result)) :: Entangler.result
+  @callback run((Entangler.state() -> Entangler.result())) :: Entangler.result()
 
   @doc """
   Callback to obtain the layers this module is attached to.
@@ -68,7 +67,7 @@ defmodule Entangle.Thorn do
     quote bind_quoted: [opts: opts] do
       @behaviour Entangle.Thorn
 
-      Module.register_attribute __MODULE__, :layers, []
+      Module.register_attribute(__MODULE__, :layers, [])
       @layers Keyword.get(opts, :layers, [:*])
 
       @doc false
@@ -81,7 +80,7 @@ defmodule Entangle.Thorn do
       @impl Entangle.Thorn
       def layers(), do: @layers
 
-      defoverridable [run: 1]
+      defoverridable run: 1
     end
   end
 
@@ -118,9 +117,12 @@ defmodule Entangle.Thorn do
       {:ok, 11}
 
   """
-  @spec grow(((Entangler.state -> Entangler.result) -> (Entangler.state -> Entangler.result)), options) :: t
+  @spec grow(
+          ((Entangler.state() -> Entangler.result()) ->
+             (Entangler.state() -> Entangler.result())),
+          options
+        ) :: t
   def grow(fun, options \\ []) do
     {fun, options}
   end
-
 end

@@ -57,9 +57,9 @@ defmodule Entangle.Seed do
   """
 
   defstruct layers: [],
-    layer_mask: 0,
-    thorns: [],
-    roots: []
+            layer_mask: 0,
+            thorns: [],
+            roots: []
 
   @typedoc """
   A map of settings, including layer setting and middleware.
@@ -67,11 +67,11 @@ defmodule Entangle.Seed do
   while the `roots` middleware we be called on the composition as a whole.
   """
   @type t :: %Entangle.Seed{
-    layers: Layers.t,
-    layer_mask: Layers.Mask.t,
-    thorns: [Entangle.Thorn.t],
-    roots: [Entangle.Thorn.t]
-  }
+          layers: Layers.t(),
+          layer_mask: Layers.Mask.t(),
+          thorns: [Entangle.Thorn.t()],
+          roots: [Entangle.Thorn.t()]
+        }
 
   @doc """
   Callback function to obtain the setting defined at compile time.
@@ -102,11 +102,13 @@ defmodule Entangle.Seed do
     active_layers = Module.get_attribute(env.module, :active_layers)
     layer_mask = Entangle.Filter.make_layer_mask(layers, active_layers)
 
-    thorns = Module.get_attribute(env.module, :thorns)
-             |> Enum.filter(fn thorn -> Entangle.Filter.layer_enabled?(thorn, layer_mask, layers) end)
+    thorns =
+      Module.get_attribute(env.module, :thorns)
+      |> Enum.filter(fn thorn -> Entangle.Filter.layer_enabled?(thorn, layer_mask, layers) end)
 
-    roots = Module.get_attribute(env.module, :roots)
-            |> Enum.filter(fn root -> Entangle.Filter.layer_enabled?(root, layer_mask, layers) end)
+    roots =
+      Module.get_attribute(env.module, :roots)
+      |> Enum.filter(fn root -> Entangle.Filter.layer_enabled?(root, layer_mask, layers) end)
 
     quote do
       @impl Entangle.Seed
@@ -152,7 +154,6 @@ defmodule Entangle.Seed do
       @layers unquote(layer)
     end
   end
-
 
   @doc """
   Define multiple layers at once in the form of a list of atoms.

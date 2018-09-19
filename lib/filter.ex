@@ -3,13 +3,16 @@ defmodule Entangle.Filter do
   # This module is used internally.
 
   @doc false
-  @spec make_layer_mask([atom], [atom]) :: Layers.Mask.t
+  @spec make_layer_mask([atom], [atom]) :: Layers.Mask.t()
   def make_layer_mask(layers, active_layers) do
-    Enum.reduce(active_layers, Layers.Mask.new(), fn layer, mask -> Layers.enable!(layers, mask, layer) end)
+    Enum.reduce(active_layers, Layers.Mask.new(), fn layer, mask ->
+      Layers.enable!(layers, mask, layer)
+    end)
   end
 
   @doc false
-  @spec layer_enabled?(Entangle.Branch.t | Entangle.Thorn.t, Layers.Mask.t, [atom]) :: boolean
+  @spec layer_enabled?(Entangle.Branch.t() | Entangle.Thorn.t(), Layers.Mask.t(), [atom]) ::
+          boolean
   def layer_enabled?({_, opts}, layer_mask, layers) do
     case Keyword.get(opts, :layers, [:*]) do
       nil -> true
