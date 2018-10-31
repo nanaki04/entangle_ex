@@ -82,10 +82,10 @@ defmodule Entangle.Entangler do
 
       settings =
         Keyword.get(opts, :settings)
-        |> Option.return()
-        |> Option.or_else(Keyword.get(opts, :seed))
-        |> Option.return()
-        |> Option.or_else(Entangle.Seed.default_settings())
+        |> OptionEx.return()
+        |> OptionEx.or_else(Keyword.get(opts, :seed))
+        |> OptionEx.return()
+        |> OptionEx.or_else(Entangle.Seed.default_settings())
 
       Module.register_attribute(__MODULE__, :entangles, accumulate: true)
       Module.register_attribute(__MODULE__, :settings, [])
