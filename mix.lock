@@ -6,8 +6,6 @@
   "makeup": {:hex, :makeup, "0.5.5", "9e08dfc45280c5684d771ad58159f718a7b5788596099bdfb0284597d368a882", [:mix], [{:nimble_parsec, "~> 0.4", [hex: :nimble_parsec, repo: "hexpm", optional: false]}], "hexpm"},
   "makeup_elixir": {:hex, :makeup_elixir, "0.10.0", "0f09c2ddf352887a956d84f8f7e702111122ca32fbbc84c2f0569b8b65cbf7fa", [:mix], [{:makeup, "~> 0.5.5", [hex: :makeup, repo: "hexpm", optional: false]}], "hexpm"},
   "nimble_parsec": {:hex, :nimble_parsec, "0.4.0", "ee261bb53214943679422be70f1658fff573c5d0b0a1ecd0f18738944f818efe", [:mix], [], "hexpm"},
-  "option": {:git, "https://github.com/nanaki04/option_ex.git", "6f5ae60b8b9bf2e98a9d88798b4e1edbd2526fd0", []},
   "option_ex": {:hex, :option_ex, "0.1.0", "daf089240580a92c72a406c9eba761614a610603abe61c62e4415543fdef7ff2", [:mix], [], "hexpm"},
-  "result": {:git, "https://github.com/nanaki04/result_ex.git", "5483e2a316e95278673f3c204edc86b979cc97d3", []},
   "result_ex": {:hex, :result_ex, "0.1.0", "72bb09048f19fc40b639c5f5134a7764826bf834d3563cbb73f1aab76eea9f37", [:mix], [], "hexpm"},
 }
