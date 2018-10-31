@@ -1,4 +1,6 @@
 defmodule Entangle.Entangler do
+  import ResultEx, only: [bind: 1, bind: 2]
+
   @moduledoc """
   Entangle is a library for composing (entangling) functions (branches).
   The composed functions and the resulting composition itself can be wrapped by middleware (thorns).
@@ -168,17 +170,17 @@ defmodule Entangle.Entangler do
       Enum.reverse(branches)
       |> Enum.reduce(&{:ok, &1}, fn
         {run, _}, acc ->
-          run = compose_thorns(thorns, Result.bind(&run.(&1)))
-          &Result.bind(run.(&1), acc)
+          run = compose_thorns(thorns, bind(&run.(&1)))
+          &bind(run.(&1), acc)
 
         branch, acc ->
-          run = compose_thorns(thorns, Result.bind(&branch.run(&1)))
-          &Result.bind(run.(&1), acc)
+          run = compose_thorns(thorns, bind(&branch.run(&1)))
+          &bind(run.(&1), acc)
       end)
 
     compose_thorns(
       roots,
-      Result.bind(fn state ->
+      bind(fn state ->
         composition.(state)
       end)
     )

@@ -8,4 +8,5 @@
   "nimble_parsec": {:hex, :nimble_parsec, "0.4.0", "ee261bb53214943679422be70f1658fff573c5d0b0a1ecd0f18738944f818efe", [:mix], [], "hexpm"},
   "option": {:git, "https://github.com/nanaki04/option_ex.git", "6f5ae60b8b9bf2e98a9d88798b4e1edbd2526fd0", []},
   "result": {:git, "https://github.com/nanaki04/result_ex.git", "5483e2a316e95278673f3c204edc86b979cc97d3", []},
+  "result_ex": {:hex, :result_ex, "0.1.0", "b4225d35201da78faaee6c7288cf7a1dd86eb32158c50ac2df20dd57ab94a96e", [:mix], [], "hexpm"},
 }

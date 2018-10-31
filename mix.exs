@@ -23,8 +23,8 @@ defmodule Entangle.MixProject do
     [
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.19", only: [:dev], runtime: false},
+      {:result_ex, "~> 0.1"},
       {:option, git: "https://github.com/nanaki04/option_ex.git"},
-      {:result, git: "https://github.com/nanaki04/result_ex.git"},
       {:layers, git: "https://github.com/nanaki04/layers_ex.git"}
     ]
   end
